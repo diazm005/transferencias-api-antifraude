@@ -1,0 +1,36 @@
+# Compilación y archivos locales de editores
+**/bin/
+**/obj/
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+TestResults/
+artifacts/
+*.log
+.DS_Store
+Thumbs.db
+
+# Credenciales y configuración privada
+.env
+.env.*
+!.env.example
+**/secrets.json
+**/appsettings.Local.json
+**/appsettings.*.local.json
+*.pfx
+*.p12
+*.pem
+*.key
+*.PublishSettings
+*.pubxml.user
+
+# Datos y respaldos de SQL Server: solo se versionan scripts y diagramas
+*.bak
+*.bacpac
+*.dacpac
+*.mdf
+*.ndf
+*.ldf
+*.trn

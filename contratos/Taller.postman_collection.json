@@ -1,0 +1,157 @@
+{
+  "info": {
+    "description": "API 5307 y batch 5310. El POST de transferencia usa SQL real: ejecútalo con datos ficticios del taller. Configura accessToken localmente.",
+    "name": "Taller Equipo 2 — API nueva y evaluador independiente",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "value": "http://127.0.0.1:5307",
+      "key": "baseUrl"
+    },
+    {
+      "value": "http://127.0.0.1:5310",
+      "key": "batchUrl"
+    },
+    {
+      "value": "",
+      "key": "accessToken"
+    },
+    {
+      "value": "11111111-1111-4111-8111-111111111111",
+      "key": "transactionReference"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "type": "string",
+        "value": "{{accessToken}}"
+      }
+    ]
+  },
+  "item": [
+    {
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health/live",
+        "auth": {
+          "type": "noauth"
+        }
+      },
+      "name": "Disponibilidad API"
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/client/12345678"
+      },
+      "name": "Cliente propio"
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/account/001"
+      },
+      "name": "Cuenta propia"
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/account/002"
+      },
+      "name": "Cuenta ajena (404)",
+      "event": [
+        {
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Cuenta ajena oculta', () => pm.response.to.have.status(404));"
+            ]
+          },
+          "listen": "test"
+        }
+      ]
+    },
+    {
+      "request": {
+        "body": {
+          "raw": "{\r\n  \"customerNationalId\": \"12345678\",\r\n  \"transactionReference\": \"{{transactionReference}}\",\r\n  \"destinationAccountNumber\": \"DESTINO-TALLER\",\r\n  \"sourceAccountNumber\": \"001\",\r\n  \"amount\": 100,\r\n  \"destinationBank\": \"BANCO_B\"\r\n}",
+          "mode": "raw"
+        },
+        "header": [
+          {
+            "value": "application/json",
+            "key": "Content-Type"
+          }
+        ],
+        "method": "POST",
+        "url": "{{baseUrl}}/api/transactions"
+      },
+      "name": "Solicitar transferencia (datos ficticios; modifica SQL)"
+    },
+    {
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/api/transactions/{{transactionReference}}"
+      },
+      "name": "Consultar seguimiento de la transferencia"
+    },
+    {
+      "item": [
+        {
+          "request": {
+            "method": "GET",
+            "url": "{{batchUrl}}/health"
+          },
+          "name": "Disponibilidad batch",
+          "event": [
+            {
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Evaluador independiente', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().service).to.eql('Fraude.Batch'); });"
+                ]
+              },
+              "listen": "test"
+            }
+          ]
+        },
+        {
+          "request": {
+            "body": {
+              "raw": "{\n  \"transactionReference\": \"11111111-1111-4111-8111-111111111111\",\n  \"amount\": 10000,\n  \"previousDebitsIn15Minutes\": 0,\n  \"knownDestination\": false\n}\n",
+              "mode": "raw"
+            },
+            "header": [
+              {
+                "value": "application/json",
+                "key": "Content-Type"
+              }
+            ],
+            "method": "POST",
+            "url": "{{batchUrl}}/api/fraud/evaluations"
+          },
+          "name": "Riesgo medio (sin SQL)",
+          "event": [
+            {
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Riesgo medio', () => { pm.response.to.have.status(200); pm.expect(pm.response.json().riskLevel).to.eql('Medio'); });"
+                ]
+              },
+              "listen": "test"
+            }
+          ]
+        }
+      ],
+      "name": "Evaluador independiente",
+      "auth": {
+        "type": "noauth"
+      }
+    }
+  ]
+}

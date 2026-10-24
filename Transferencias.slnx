@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Servicios/">
+    <Project Path="src/Transferencias.Api/Transferencias.Api.csproj" />
+    <Project Path="src/Fraude.Batch/Fraude.Batch.csproj" />
+  </Folder>
+  <Folder Name="/Nucleo/">
+    <Project Path="src/Application/Application.csproj" />
+    <Project Path="src/Domain/Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infraestructura/">
+    <Project Path="src/Transferencias.Infrastructure/Transferencias.Infrastructure.csproj" />
+    <Project Path="src/SqlServerInfrastructure/SqlServerInfrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Pruebas/">
+    <Project Path="tests/TestDoubles/TestDoubles.csproj" />
+    <Project Path="tests/Taller.Tests/Taller.Tests.csproj" />
+    <Project Path="tests/Transferencias.Tests/Transferencias.Tests.csproj" />
+    <Project Path="tests/Transferencias.Infrastructure.Tests/Transferencias.Infrastructure.Tests.csproj" />
+  </Folder>
+</Solution>

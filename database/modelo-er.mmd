@@ -1,0 +1,17 @@
+erDiagram
+    Segmento ||--o{ Cliente : determina_limite
+    Cliente ||--o{ Cuenta : posee
+    Banco ||--o{ Cuenta : identifica
+    Cliente ||--o{ Transferencia : solicita
+    Cuenta ||--o{ Transferencia : origen_del_titular
+    Banco ||--o{ Transferencia : recibe
+    Cuenta o|--o{ Transferencia : destino_interno
+    EstadoTransferencia ||--o{ Transferencia : estado_actual
+    Transferencia ||--o{ AuditoriaTransferencia : conserva_eventos
+    EstadoTransferencia ||--o{ AuditoriaTransferencia : estado_del_evento
+    Transferencia ||--o{ MovimientoCuenta : genera
+    Cuenta ||--o{ MovimientoCuenta : afecta
+    Transferencia ||--o{ EvaluacionFraude : solicita_riesgo
+    NivelRiesgo o|--o{ EvaluacionFraude : resultado_opcional
+    Transferencia ||--o{ NotificacionCliente : comunica
+    AuditoriaTransferencia ||--o{ NotificacionCliente : origina_aviso
